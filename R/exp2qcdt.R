@@ -69,7 +69,7 @@ exp2qcdt <- function(exp_table_file, phenotype_file, result_dir) {
   } else if (length(unique(dt_meta$sample)) > 2) {
     get_one_group(dt_exp_melt, dt_exp_annot, exp_fpkm_log, dt_pairs, dt_meta, result_dir)
     get_two_group(dt_exp_annot, exp_fpkm_log, dt_pairs, dt_meta, result_dir)
-    get_more_group(exp_fpkm_log, dt_meta, result_dir)
+    get_more_group(exp_fpkm, dt_meta, result_dir)
     combine_sd_summary_table(result_dir, sample_num = 4)
     make_score_figure(result_dir, sample_num = 4)
   }

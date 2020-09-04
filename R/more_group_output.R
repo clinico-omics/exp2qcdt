@@ -1,3 +1,9 @@
+# low expression gene filter
+low_expression_filter <- function(x, thr, quantile){
+  expCut <- quantile(x[x > thr], quantile)
+  x <- x[(rowMaxs(x) > expCut) & rowVars(x)>0, ]
+  return(x)
+}
 #' S1-6 SNR
 #'
 #' @importFrom data.table setkey
@@ -44,9 +50,11 @@ get_pca_list <- function(expr_mat_forsignoise, exp_design, dt_meta) {
 #' Get lst gene which was used to count snr by reference dataset
 #'
 #' @importFrom stats predict
-get_more_group <- function(exp_fpkm_log, dt_meta, result_dir) {
+get_more_group <- function(exp_fpkm, dt_meta, result_dir) {
   exp_design = (dt_meta[, .(library, group = sample)] %>% setkey(., library))
-  exp_fpkm_log_fiter <- exp_fpkm_log[ref_data$snr_lst_gene,]
+  exp_fpkm_lowfilt <- low_expression_filter(exp_fpkm, thr = 0.01, quantile = 0.4)
+  exp_fpkm_log_fiter <- log2(exp_fpkm_lowfilt + 0.01)
+  # exp_fpkm_log_fiter <- exp_fpkm_log[ref_data$snr_lst_gene,]
   pca_list <- get_pca_list(exp_fpkm_log_fiter, exp_design, dt_meta)
   fwrite(pca_list, file = paste(result_dir, "/performance_assessment/studydesign_snr.txt", sep = ""), sep = "\t")
 
@@ -76,7 +84,7 @@ get_more_group <- function(exp_fpkm_log, dt_meta, result_dir) {
     theme(axis.text.x = element_text(size = 14),
           legend.text = element_text(size = 14)) +
     scale_fill_manual(values = c("#4CC3D9", "#7BC8A4", "#FFC65D", "#F16745")) +
-    scale_color_manual(values = c("#2f5c85", "#7BC8A4", "#FFC65D", "#F16745")) +
+    scale_color_manual(values = c("#4CC3D9", "#7BC8A4", "#FFC65D", "#F16745")) +
     ggtitle(paste("SNR: ", pca_list$SNR[1], sep = "")) +
     labs(x = paste("PC1 (", pca_list$PC1_ratio, "%)", sep = ""),
          y = paste("PC1 (", pca_list$PC2_ratio, "%)", sep = ""))

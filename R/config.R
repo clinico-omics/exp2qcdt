@@ -205,7 +205,7 @@ make_score_figure <- function(result_dir, sample_num) {
     scale_fill_manual(values = colorRampPalette(brewer.pal(9, "RdYlGn"))(16)) +
     annotate(geom = "curve", x = test_score,
              y = 2.5, xend = test_score, curvature = 0,
-             yend = 1.5, arrow = arrow(angle = 45, length = unit(9, "mm"), type = "closed"), color = "grey") +
+             yend = 1.5, arrow = arrow(angle = 45, length = unit(9, "mm"), type = "closed"), color = "grey", lty = 0) +
     annotate(geom = "text", x = dt_pscore[.("Test"), on = .(Batch)][["Benchmarkingscore"]],
              y = 2.2, label = test_score, hjust = "center", size = 10, fontface = "bold") +
     theme_void() +

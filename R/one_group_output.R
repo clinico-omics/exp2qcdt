@@ -1,5 +1,5 @@
 #' Get one group
-#'
+#' @export
 #' @importFrom stats cor
 #' @importFrom ggplot2 ggtitle
 get_one_group <- function(dt_exp_melt, dt_exp_annot, exp_fpkm_log, dt_pairs, dt_meta, result_dir) {
